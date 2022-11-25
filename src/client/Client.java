@@ -11,17 +11,17 @@ public class Client {
         try {
             Socket client = new Socket("127.0.0.1", 5000);
             PrintWriter out = new PrintWriter(client.getOutputStream());
-            // Scanner scann = new Scanner(System.in);
-            // String msg = scann.nextLine();
+            Scanner scann = new Scanner(System.in);
+            String msg = scann.nextLine();
 
-            Thread listener = new Thread(new ClientThread(client));
+            Thread listener = new Thread(new ClientListener(client));
             listener.start();
             
-            // while(msg != null) {
-            //     out.println(msg);
-            //     out.flush();
-            //     msg = scann.nextLine();
-            // }
+            while(msg != null) {
+                out.println(msg);
+                out.flush();
+                msg = scann.nextLine();
+            }
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
