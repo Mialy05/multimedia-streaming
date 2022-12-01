@@ -14,7 +14,7 @@ public class Client {
             Scanner scann = new Scanner(System.in);
             String msg = scann.nextLine();
 
-            Thread listener = new Thread(new ClientListener(client));
+            Thread listener = new Thread(new ClientThread(client));
             listener.start();
             
             while(msg != null) {

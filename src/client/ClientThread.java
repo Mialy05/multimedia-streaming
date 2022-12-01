@@ -18,7 +18,7 @@ public class ClientThread implements Runnable {
     Socket client;
 
     public ClientThread(Socket client) {
-        this.client = client; 
+        this.client = client;
     }
 
     @Override
@@ -31,93 +31,96 @@ public class ClientThread implements Runnable {
         Vector<Byte> dataTmp = new Vector<Byte>();
 
         DataInputStream input;
-        try {
-            input = new DataInputStream(client.getInputStream());
-            String info = input.readUTF();
-            String[] infos = info.split(";;");
-
-            String type = infos[0];
-            JFrame frame = new JFrame();
-            JLabel label = new JLabel();
-            frame.add(label);
-            frame.setSize(500, 500);
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-
-            // while (true) {
+        while (true)
             try {
-                Byte msg = input.readByte();
-                if (type.compareToIgnoreCase("song") == 0) {
-                    nbr = 0;
-                    while (msg != null) {
-                        // input.readFully(d, 0, tranche);
-                        // play(d);
-                        // musicStream = new DataInputStream(new ByteArrayInputStream(d));
-                        // musicPlayer = new AdvancedPlayer(musicStream);
-                        // musicPlayer.play();
-                        if (nbr >= tranche) {
-                            label.setText("Playing " + infos[1]);
-                            System.out.println("Playing " + infos[1]);
+                input = new DataInputStream(client.getInputStream());
+                String info = input.readUTF();
+                String[] infos = info.split(";;");
 
-                            for (Byte b : d) {
-                                if(b != null) {
-                                    dataTmp.add(b);
+                String type = infos[0];
+                JFrame frame = new JFrame();
+                JLabel label = new JLabel();
+                frame.add(label);
+                frame.setSize(500, 500);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+                System.out.println(type);
+           
+                try {
+                // SONGS  
+                    if(type.compareToIgnoreCase("song") == 0) {
+                        Byte msg = input.readByte();
+                        nbr = 0;
+                        while (msg != null) {
+                            if (nbr >= tranche) {
+                                label.setText("Playing " + infos[1]);
+                                System.out.println("Playing " + infos[1]);
+
+                                for (Byte b : d) {
+                                    if (b != null) {
+                                        dataTmp.add(b);
+                                    }
                                 }
+
+                                byte[] byteToRead = new byte[dataTmp.size()];
+                                for (int i = 0; i < dataTmp.size(); i++) {
+                                    byteToRead[i] = dataTmp.get(i);
+                                }
+                                dataTmp.removeAllElements();
+                                System.out.println("mamaky " + byteToRead.length);
+                                musicStream = new DataInputStream(new ByteArrayInputStream(byteToRead));
+                                musicPlayer = new AdvancedPlayer(musicStream);
+                                musicPlayer.play();
+
+                                d = new Byte[tranche];
+                                nbr = 0;
+                            }
+                            if (nbr < tranche) {
+                                d[nbr] = msg;
+                                nbr++;
                             }
 
-                            byte[] byteToRead = new byte[dataTmp.size()];
-                            for (int i=0; i<dataTmp.size(); i++) {
-                                byteToRead[i] = dataTmp.get(i);
-                            }
-                            dataTmp.removeAllElements();
-                            System.out.println("mamaky " + byteToRead.length);
-                            musicStream = new DataInputStream(new ByteArrayInputStream(byteToRead));
-                            musicPlayer = new AdvancedPlayer(musicStream);
-                            musicPlayer.play();
-
-                            d = new Byte[tranche];
-                            nbr = 0;
+                            msg = input.readByte();
                         }
-                        if (nbr < tranche) {
-                            d[nbr] = msg;
-                            nbr++;
+                    } 
+                // IMAGES    
+                    else if(type.compareToIgnoreCase("img") == 0) {
+                        System.out.println("Ato oh");
+                        Vector<Byte> data = new Vector<Byte>();
+                        byte msg = input.readByte();
+                        while (input.available() != 0) {
+                            data.add(msg);
+                            label.setText("Loading ...");
+
+                            msg = input.readByte();
                         }
 
-                        msg = input.readByte();
+                        System.out.println("mivoaka " + data.size());
+
+                        byte[] imgData = new byte[data.size()];
+                        for (int i = 0; i < data.size(); i++) {
+                            imgData[i] = data.get(i);
+                        }
+
+                        ImageIcon img = new ImageIcon(imgData);
+                        label.setIcon(img);
                     }
-                    // System.out.println("tonga daholo ny avy amin'ny serveur ");
-                } else {
-                    Vector<Byte> data = new Vector<Byte>();
+                // VIDEO    
+                    else if(type.compareToIgnoreCase("video") == 0) {
 
-                    while (input.available() != 0) {
-                        data.add(msg);
-                        label.setText("Loading ...");
-
-                        msg = input.readByte();
                     }
-
-                    System.out.println("mivoaka " + data.size());
-
-                    byte[] imgData = new byte[data.size()];
-                    for (int i = 0; i < data.size(); i++) {
-                        imgData[i] = data.get(i);
-                    }
-
-                    ImageIcon img = new ImageIcon(imgData);
-                    label.setIcon(img);
+                } catch (IOException e) {
+     
+                    e.printStackTrace();
+                } catch (JavaLayerException e) {
+     
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (JavaLayerException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+              
+            } catch (IOException e1) {
+ 
+                e1.printStackTrace();
             }
-            // }
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
 
     }
 

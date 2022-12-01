@@ -16,9 +16,9 @@ import javazoom.jl.player.Player;
  */
 public class App {
     public static void main(String[] args) throws FileNotFoundException, JavaLayerException {
-        FileInputStream in = new FileInputStream(new File("assets/songs/Astrid S - Trust Issues (Lyrics)(MP3_160K).mp3"));
-        Player player = new Player(in);
-        player.play();
+        // FileInputStream in = new FileInputStream(new File("assets/video/PASSION - Miraculous Wū.mp4"));
+        // Player player = new Player(in);
+        // player.play();
     }
     
 }
