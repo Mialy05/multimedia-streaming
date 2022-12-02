@@ -1,133 +1,60 @@
 package client;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import javazoom.jl.player.advanced.AdvancedPlayer;
+import java.util.Scanner;
 
 public class ClientThread implements Runnable {
     Socket client;
+    Thread running;
+    Boolean stop;
 
     public ClientThread(Socket client) {
         this.client = client;
+        this.stop = false;
     }
 
     @Override
     public void run() {
-        DataInputStream musicStream;
-        AdvancedPlayer musicPlayer;
-        int tranche = 50000;
-        int nbr = 0;
-        Byte[] d = new Byte[tranche];
-        Vector<Byte> dataTmp = new Vector<Byte>();
+        Scanner scann = new Scanner(System.in);
+        try {
+            PrintWriter out = new PrintWriter(client.getOutputStream());
+            String msg;
+            while (true) {
+                msg = scann.nextLine();
 
-        DataInputStream input;
-        while (true)
-            try {
-                input = new DataInputStream(client.getInputStream());
-                String info = input.readUTF();
-                String[] infos = info.split(";;");
-
-                String type = infos[0];
-                JFrame frame = new JFrame();
-                JLabel label = new JLabel();
-                frame.add(label);
-                frame.setSize(500, 500);
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-                System.out.println(type);
-           
-                try {
-                // SONGS  
-                    if(type.compareToIgnoreCase("song") == 0) {
-                        Byte msg = input.readByte();
-                        nbr = 0;
-                        while (msg != null) {
-                            if (nbr >= tranche) {
-                                label.setText("Playing " + infos[1]);
-                                System.out.println("Playing " + infos[1]);
-
-                                for (Byte b : d) {
-                                    if (b != null) {
-                                        dataTmp.add(b);
-                                    }
-                                }
-
-                                byte[] byteToRead = new byte[dataTmp.size()];
-                                for (int i = 0; i < dataTmp.size(); i++) {
-                                    byteToRead[i] = dataTmp.get(i);
-                                }
-                                dataTmp.removeAllElements();
-                                System.out.println("mamaky " + byteToRead.length);
-                                musicStream = new DataInputStream(new ByteArrayInputStream(byteToRead));
-                                musicPlayer = new AdvancedPlayer(musicStream);
-                                musicPlayer.play();
-
-                                d = new Byte[tranche];
-                                nbr = 0;
-                            }
-                            if (nbr < tranche) {
-                                d[nbr] = msg;
-                                nbr++;
-                            }
-
-                            msg = input.readByte();
-                        }
-                    } 
-                // IMAGES    
-                    else if(type.compareToIgnoreCase("img") == 0) {
-                        System.out.println("Ato oh");
-                        Vector<Byte> data = new Vector<Byte>();
-                        byte msg = input.readByte();
-                        while (input.available() != 0) {
-                            data.add(msg);
-                            label.setText("Loading ...");
-
-                            msg = input.readByte();
-                        }
-
-                        System.out.println("mivoaka " + data.size());
-
-                        byte[] imgData = new byte[data.size()];
-                        for (int i = 0; i < data.size(); i++) {
-                            imgData[i] = data.get(i);
-                        }
-
-                        ImageIcon img = new ImageIcon(imgData);
-                        label.setIcon(img);
+                if(running != null) {
+                    this.stop = true;
+                    try {
+                        running.interrupt();
+                        System.out.println("Lecture courante interrompu");
+                    } catch (Exception e) {
+                        System.out.println("Tsy afaka mamono zah");
                     }
-                // VIDEO    
-                    else if(type.compareToIgnoreCase("video") == 0) {
+                    System.out.println("running : " + running.isAlive() + " interrupted: " + running.isInterrupted());
 
-                    }
-                } catch (IOException e) {
-     
-                    e.printStackTrace();
-                } catch (JavaLayerException e) {
-     
-                    e.printStackTrace();
                 }
-              
-            } catch (IOException e1) {
- 
-                e1.printStackTrace();
+                System.out.println("req : " + msg);
+                out.println(msg);
+                out.flush();
+                Thread listener = new Thread(new Listener(client, stop));
+                listener.start();
+                this.running = listener;
+                System.out.println("thread vaovao !!!");
             }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
+        // while (msg != null) {
+        //     out.println(msg);
+        //     out.flush();
+        //     msg = scann.nextLine();
+        // }
+        
     }
 
-    public static void play(byte[] b) throws JavaLayerException {
-        DataInputStream in = new DataInputStream(new ByteArrayInputStream(b));
-        Player p = new Player(in);
-        p.play();
-    }
 
 }
