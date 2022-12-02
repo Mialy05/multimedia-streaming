@@ -18,8 +18,8 @@ public class ServerThread implements Runnable {
         BufferedReader in;
         String msg;
         int i=1;
-
-        while (true) {
+        System.out.println(client.isClosed());
+        while (!client.isClosed()) {
             try {
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 msg = in.readLine();
@@ -36,7 +36,9 @@ public class ServerThread implements Runnable {
                 }
                 i++;
             } catch (IOException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
+                System.out.println("Client disconnected");
+                break;
             }
         }
 

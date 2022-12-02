@@ -1,15 +1,16 @@
 package client;
 
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 public class ShowVideo {
-    StackPane component;
+    Pane component;
     Media video;
     
-    public ShowVideo(StackPane component, Media video) {
+    public ShowVideo(Pane component, Media video) {
         this.component = component;
         this.video = video;
     }
