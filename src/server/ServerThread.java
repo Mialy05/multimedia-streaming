@@ -17,29 +17,26 @@ public class ServerThread implements Runnable {
     public void run() {
         BufferedReader in;
         String msg;
-        int i=1;
-        System.out.println(client.isClosed());
         while (!client.isClosed()) {
             try {
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 msg = in.readLine();
-                if(running != null) {
-                    System.out.println("Nouvelle requete. Lecture courante interrompu");
+                System.out.println("Ito msg " + msg);
+                if (running != null) {
                     running.interrupt();
-                    System.out.println("running " + running.isAlive() + " interrupted " + running.isInterrupted());
+                    System.out.println("interrupted " + running.isInterrupted());
                 }
-                System.out.println(msg);
-                if(i==1) {
-                    Thread sender = new Thread(new Sender(msg, client));
-                    running = sender;
-                    sender.start();
-                }
-                i++;
+                
+                Sender sender = new Sender(msg, client);
+                Thread threadSender = new Thread(sender);
+                running = threadSender;
+                threadSender.start();
+
             } catch (IOException e) {
                 // e.printStackTrace();
                 System.out.println("Client disconnected");
                 break;
-            }
+            } 
         }
 
     }

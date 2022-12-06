@@ -1,5 +1,14 @@
-<h1>Projet Socket: Multimedia streaming </h1>
-<section>
-    <h4>RAKOTONDRIAKA Mialisoa Murielle</h4>
-    <h3>ETU1834</h3>
-</section>
+### Description
+Projet programmation système (Socket) : Multimédia Streaming 
+* Client : src/client
+* Serveur : src/server
+
+### Auteur
+RAKOTONDRIAKA Mialisoa Murielle
+ETU001834
+
+### Dépendances
+* Librairie JLayer
+* Librairie Javafx
+
+

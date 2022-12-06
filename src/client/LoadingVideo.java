@@ -25,17 +25,15 @@ public class LoadingVideo implements Runnable {
             DataOutputStream writer = new DataOutputStream(new FileOutputStream(destination));
 
             int tranche = 130000;
-            // int tranche = 896;
+ 
             System.out.println(tranche);
             byte[] dataSource = new byte[tranche];
             int read = source.read(dataSource);
             System.out.println("vovaky " + read);
             while (read == tranche) {
                 writer.write(dataSource);
-                // System.out.println("Loading " + destination.length() + "/" + source.length());
                 read = source.read(dataSource);
-                // Thread.sleep(1000);
-                // break;
+                System.out.println("content " + destination.length());
             }
             if(read != -1) {
                 System.out.println("farany");
@@ -45,13 +43,11 @@ public class LoadingVideo implements Runnable {
                 }
                 writer.write(lastdata);
             }
-            // System.out.println("file loaded " +destination.length() + "/" + source.length() );
+            System.out.println("loading finished " + destination.length());
 
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } 
 

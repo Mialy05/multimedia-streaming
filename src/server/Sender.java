@@ -1,18 +1,15 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Sender implements Runnable {
     String req;
     Socket client;
-    
+
     public Sender(String req, Socket client) {
         this.req = req;
         this.client = client;
@@ -55,20 +52,20 @@ public class Sender implements Runnable {
             file = null;
         }
 
-        DataOutputStream out;
         try {
-            out = new DataOutputStream(client.getOutputStream());
-            if (!error) {
-                // DataInputStream inputStream = new DataInputStream(new FileInputStream(file));
+            DataOutputStream out = new DataOutputStream(client.getOutputStream());
+            if (!error) { 
                 FileInputStream inputStream = new FileInputStream(file);
                 byte[] data = inputStream.readAllBytes();
-                System.out.println(data.length);
+              
+
                 System.out.println("Sending " + file.getName() + " ... ");
                 out.writeUTF(fileType + ";;" + data.length + ";;" + file.getName());
-                System.out.println("Mandefa data");
-                
                 out.write(data);
-                // out.flush();
+                out.flush();
+                
+
+                System.out.println("lany");
             } else {
                 out.writeUTF("Erreur fichier n'existe pas dans le repertoire");
             }

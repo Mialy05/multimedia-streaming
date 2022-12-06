@@ -1,20 +1,18 @@
 package client;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Vector;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
-import javazoom.jl.decoder.JavaLayerException;
 
 
 public class Listener extends Application implements Runnable  {
@@ -22,10 +20,13 @@ public class Listener extends Application implements Runnable  {
     Pane component;
     String type;
     byte[] imgData;
+    boolean ready;
+    PlayAudio player;
 
     public Listener(Socket sender, Pane component) {
         this.sender = sender;
         this.component = component;
+        player = new PlayAudio(sender);
     }
 
     @Override
@@ -36,70 +37,33 @@ public class Listener extends Application implements Runnable  {
             System.out.println("mihaino oh");
             input = new DataInputStream(sender.getInputStream());
             String info = input.readUTF();
-            System.out.println(info);
+            
+            System.out.println("nivoaka avec " + info);
             String[] infos = info.split(";;");
 
             type = infos[0];
-            Thread.sleep(2000);
+            // Thread.sleep(2000);
         
         // SONGS
             if (type.compareToIgnoreCase("song") == 0) {
-                int tranche = 50000;
-                int nbr = 0;
-                Byte[] d = new Byte[tranche];
-                Vector<Byte> dataTmp = new Vector<Byte>();
-                Byte msg = input.readByte();
-                nbr = 0;
-                while (msg != null) {
-                    if (nbr >= tranche) {
-                        // System.out.println("Playing ...");
+                File background = new File("assets-client/musique.png");
+                FileInputStream backgroundIn = new FileInputStream(background);
+                Image img = new Image(backgroundIn);
+                ImageView imgView = new ImageView(img);
+                imgView.setFitHeight(500);
+                imgView.setFitWidth(600);
+                imgView.setPreserveRatio(true);
 
-                        for (Byte b : d) {
-                            if (b != null) {
-                                dataTmp.add(b);
-                            }
-                        }
-                        byte[] byteToRead = new byte[dataTmp.size()];
-                        System.out.println(byteToRead.length);
-                        for (int i = 0; i < dataTmp.size(); i++) {
-                            byteToRead[i] = dataTmp.get(i);
-                        }
-                        dataTmp.removeAllElements();
-                        PlayAudio playAudio = new PlayAudio(byteToRead);
-                        playAudio.play();
-                    // JAVAFX    
-                        // component.getChildren().add(new Label("Playing " + infos[2]));
-
-                        d = new Byte[tranche];
-                        nbr = 0;
-                    }
-                    if (nbr < tranche) {
-                        d[nbr] = msg;
-                        nbr++;
-                    }
-                    msg = input.readByte();
-                    
-                }
+    
+                component.getChildren().clear();
+                component.getChildren().add(imgView);
+                Thread audioPlayer = new Thread(player);
+                audioPlayer.start();
+                
             }
             // IMAGES
             else if (type.compareToIgnoreCase("img") == 0) {
-                Vector<Byte> data = new Vector<Byte>();
-                byte msg = input.readByte();
-                while (input.available() != 0) {
-                    data.add(msg);
-
-                    msg = input.readByte();
-                }
-
-                System.out.println("mivoaka " + data.size());
-
-                imgData = new byte[data.size()];
-                for (int i = 0; i < data.size(); i++) {
-                    imgData[i] = data.get(i);
-                }
-
-                ShowImg imgViewer = new ShowImg(component, imgData);
-                imgViewer.start(null);
+                Platform.runLater(new LoadingImage(sender, Integer.parseInt(infos[1]) ,component));
             }
         // VIDEO
             else if (type.compareToIgnoreCase("video") == 0) {
@@ -107,13 +71,13 @@ public class Listener extends Application implements Runnable  {
                 Thread loader = new Thread(new LoadingVideo(input, tmp, sender));
                 loader.start();
                 Media video = new Media(tmp.toURI().toString());
+                System.out.println("Kely sisa");
+                Thread.sleep(2000);
                 ShowVideo videoViewer = new ShowVideo(component, video);
                 videoViewer.start();
             }
-        } catch (IOException e) {
 
-            e.printStackTrace();
-        } catch (JavaLayerException e) {
+        } catch (IOException e) {
 
             e.printStackTrace();
         } catch (Exception e) {
@@ -127,5 +91,47 @@ public class Listener extends Application implements Runnable  {
     public void start(Stage arg0) throws Exception {
         
     }
+
+    public Socket getSender() {
+        return sender;
+    }
+
+    public void setSender(Socket sender) {
+        this.sender = sender;
+    }
+
+    public Pane getComponent() {
+        return component;
+    }
+
+    public void setComponent(Pane component) {
+        this.component = component;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public byte[] getImgData() {
+        return imgData;
+    }
+
+    public void setImgData(byte[] imgData) {
+        this.imgData = imgData;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    
 
 }
