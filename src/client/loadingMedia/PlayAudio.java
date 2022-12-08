@@ -28,7 +28,7 @@ public class PlayAudio implements Runnable {
 
     @Override
     public void run() {
-        int tranche = 50000;
+        int tranche = 80000;
 
         try {
             Thread.sleep(1000);

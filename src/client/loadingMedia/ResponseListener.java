@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.net.Socket;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.plaf.DimensionUIResource;
 
 import client.event.StopVideo;
@@ -22,8 +24,6 @@ import java.awt.Container;
 import java.awt.Image;
 import java.awt.BorderLayout;
 
-import uk.co.caprica.vlcj.player.base.MediaPlayer;
-import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
 
 public class ResponseListener implements Runnable {
@@ -40,6 +40,8 @@ public class ResponseListener implements Runnable {
     @Override
     public void run() {
         DataInputStream input;
+        JLabel title = new JLabel();
+        Container mainComponent = frame.getContentPane();
 
         try {
             System.out.println("mihaino oh");
@@ -60,25 +62,33 @@ public class ResponseListener implements Runnable {
             String[] infos = info.split(";;");
 
             type = infos[0];
+            title.setText(infos[2].toUpperCase());
+            title.setHorizontalAlignment(SwingConstants.CENTER);
+            title.setBorder(BorderFactory.createTitledBorder("Mandeha izao"));
+
             resetFrame(frame);
 
             // SONGS
             if (type.compareToIgnoreCase("song") == 0) {
-                File background = new File("assets-client/musique.png");
-                // FileInputStream backgroundIn = new FileInputStream(background);
+
+                File background = new File("assets-client/music.jpg");
 
                 PlayAudio player = new PlayAudio(sender, frame);
                 Thread audioPlayer = new Thread(player);
                 audioPlayer.start();
 
+
+
                 Image img = ImageIO.read(background);
-                img = img.getScaledInstance(600, 500, Image.SCALE_SMOOTH);
+                img = img.getScaledInstance(700, 500, Image.SCALE_SMOOTH);
                 ImageIcon displayImg = new ImageIcon(img);
                 JLabel label = new JLabel();
                 label.setIcon(displayImg);
 
-                frame.add(label);
+                mainComponent.add(label);
+                mainComponent.add(title, BorderLayout.NORTH);
 
+                frame.repaint();
             }
             // IMAGES
             else if (type.compareToIgnoreCase("img") == 0) {
@@ -87,14 +97,18 @@ public class ResponseListener implements Runnable {
                 byte[] imgData = new byte[imgSize];
                 input.readFully(imgData);
                 Image img = ImageIO.read(new ByteArrayInputStream(imgData));
-                img = img.getScaledInstance(600, 500, Image.SCALE_SMOOTH);
+                img = img.getScaledInstance(700, 500, Image.SCALE_SMOOTH);
 
                 ImageIcon displayImg = new ImageIcon(img);
 
                 JLabel label = new JLabel();
                 label.setIcon(displayImg);
 
-                frame.add(label);
+                mainComponent.add(label);
+                mainComponent.add(title, BorderLayout.NORTH);
+
+                frame.repaint();
+
                 System.out.println("Loading finished " + imgData.length);
             }
             // VIDEO
@@ -107,7 +121,7 @@ public class ResponseListener implements Runnable {
                 Thread loader = new Thread(new LoadingVideo(input, tmp, sender));
                 loader.start();
 
-                Container mainComponent = frame.getContentPane();
+                
                 mainComponent.add(component);
                 JPanel controlers = new JPanel();
                 controlers.setName("Options");
@@ -119,10 +133,11 @@ public class ResponseListener implements Runnable {
                 controlers.add(btn);
                 
                 controlers.add(message);
+                mainComponent.add(title, BorderLayout.NORTH);
                 mainComponent.add(controlers, BorderLayout.SOUTH);
 
+                frame.repaint();
                 component.mediaPlayer().media().play(tmp.toPath().toString());
-
             }
 
         } catch (IOException e) {

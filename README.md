@@ -16,6 +16,7 @@ ETU001834
 
 
 ### Remarque
+* Format vidéo supporté : mkv
 * (javax.swing) Si le média ne s'affiche pas : modifier un peu la taille de la fenêtre du programme 
 * Le média en cours doit être entièrement chargé avant de charger d'autres médias (Cas Musique : attendre qu'elle finisse )
 

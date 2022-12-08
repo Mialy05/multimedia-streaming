@@ -1,10 +1,14 @@
 package client;
 
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
 
 import client.event.BtnListener;
@@ -41,7 +45,7 @@ public class Client {
 
     public static JPanel createGui(Socket client, JFrame frame) throws IOException {
         JPanel gui = new JPanel();
-        gui.setLayout(new BorderLayout(20, 10));
+        gui.setLayout(new BorderLayout(20, 5));
         frame.setContentPane(gui);
 
         JPanel leftSide = new JPanel();
@@ -50,6 +54,8 @@ public class Client {
         BoxLayout leftLayout = new BoxLayout(leftSide, BoxLayout.PAGE_AXIS);
         
         leftSide.setLayout(leftLayout);
+        leftSide.setBackground(Color.WHITE);
+        leftSide.setBorder(BorderFactory.createMatteBorder(1, 10, 1, 1, Color.decode("#9683EC")));
 
     // LOAD MEDIA LIST FROM SERVER
         DataInputStream input = new DataInputStream(client.getInputStream());
@@ -60,6 +66,7 @@ public class Client {
 
             for (String category : categories) {
                 JPanel categoryBox = new JPanel();
+                categoryBox.setBackground(Color.WHITE);
                 leftSide.add(categoryBox);
                 categoryBox.setLayout(new BoxLayout(categoryBox, BoxLayout.PAGE_AXIS));
                 
@@ -73,13 +80,14 @@ public class Client {
                 int numero = 0;
                 for (String e : elements) {
                     JPanel element = new JPanel();
+                    element.setBackground(Color.WHITE);
                     categoryBox.add(element);
                     leftSide.add(element);    
-                    JLabel elementTitle = new JLabel(e);
+                    JLabel elementTitle = new JLabel(e, SwingConstants.LEFT);
                     JButton btn = new JButton();
                     element.add(elementTitle);
                     element.add(btn);
-                    element.setPreferredSize(new DimensionUIResource(500, 20));
+                    // element.setPreferredSize(new DimensionUIResource(500, 20));
 
                     String model = "";
                     if (type.compareToIgnoreCase("img") == 0) {
