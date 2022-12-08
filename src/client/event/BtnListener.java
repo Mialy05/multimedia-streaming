@@ -24,18 +24,6 @@ public class BtnListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        JButton btn = (JButton)e.getSource();
-        if (btn.getText().compareToIgnoreCase("hihaino") == 0 || btn.getText().compareToIgnoreCase("hijery") == 0) {
-            btn.setText("Aoka izay");
-
-        } else {
-            if (req.startsWith("S")) {
-                btn.setText("Hihaino");
-            } else {
-                btn.setText("Hijery");
-            }
-        }
-       
         try {
             PrintWriter out = new PrintWriter(client.getOutputStream());
             out.println(req);
@@ -52,7 +40,6 @@ public class BtnListener implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
         
     }
 

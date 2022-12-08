@@ -16,16 +16,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class AppClient {
+public class Client {
     Socket client;
 
-    public AppClient() {
+    public Client() {
         try {
             client = new Socket("127.0.0.1", 5000);
             JFrame frame = new JFrame("Multimedia Streaming");
             JPanel mainComponent = createGui(client, frame);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setBounds(200, 200, 1200, 600);
+            frame.setBounds(200, 200, 1200, 700);
             frame.setVisible(true);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -36,7 +36,7 @@ public class AppClient {
     }
 
     public static void main(String[] args) {
-        new AppClient();
+        new Client();
     }
 
     public static JPanel createGui(Socket client, JFrame frame) throws IOException {
@@ -47,7 +47,6 @@ public class AppClient {
         JPanel leftSide = new JPanel();
         gui.add(leftSide, BorderLayout.WEST);
         leftSide.setPreferredSize(new DimensionUIResource(500, 600));
-        leftSide.setBackground(Color.CYAN);
         BoxLayout leftLayout = new BoxLayout(leftSide, BoxLayout.PAGE_AXIS);
         
         leftSide.setLayout(leftLayout);
@@ -68,7 +67,7 @@ public class AppClient {
                 String lists = category.split(":")[1];
                 String[] elements = lists.split("//");
                 
-                JLabel categoryTitle = new JLabel(type);
+                JLabel categoryTitle = new JLabel();
                 categoryBox.add(categoryTitle);
                 
                 int numero = 0;
@@ -85,12 +84,15 @@ public class AppClient {
                     String model = "";
                     if (type.compareToIgnoreCase("img") == 0) {
                         model = "I";
+                        categoryTitle.setText("SARY");
                         btn.setText("Hijery");
                     } else if (type.compareToIgnoreCase("songs") == 0) {
                         model = "S";
+                        categoryTitle.setText("HIRA");
                         btn.setText("Hihaino");
                     } else if (type.compareToIgnoreCase("video") == 0) {
                         model = "V";
+                        categoryTitle.setText("SARY MIHETSIKA");
                         btn.setText("Hijery");
                     }
 

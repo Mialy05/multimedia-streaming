@@ -8,13 +8,19 @@ import java.net.Socket;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.plaf.DimensionUIResource;
+
+import client.event.StopVideo;
+import client.event.VideoEvent;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Image;
-import java.awt.Canvas;
+import java.awt.BorderLayout;
 
 import uk.co.caprica.vlcj.player.base.MediaPlayer;
 import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter;
@@ -39,7 +45,7 @@ public class ResponseListener implements Runnable {
             System.out.println("mihaino oh");
             input = new DataInputStream(sender.getInputStream());
             String info = "";
-            while(info.equals("")) {
+            while (info.equals("")) {
                 try {
                     System.out.println("Waiting ...");
                     info = input.readUTF();
@@ -54,12 +60,7 @@ public class ResponseListener implements Runnable {
             String[] infos = info.split(";;");
 
             type = infos[0];
-            Component[] components = frame.getContentPane().getComponents();
-            if(components.length > 1) {
-                frame.getContentPane().remove(components[1]);
-            }
-                        
-            frame.repaint();
+            resetFrame(frame);
 
             // SONGS
             if (type.compareToIgnoreCase("song") == 0) {
@@ -77,7 +78,6 @@ public class ResponseListener implements Runnable {
                 label.setIcon(displayImg);
 
                 frame.add(label);
-                frame.setVisible(true);
 
             }
             // IMAGES
@@ -99,31 +99,28 @@ public class ResponseListener implements Runnable {
             }
             // VIDEO
             else if (type.compareToIgnoreCase("video") == 0) {
-                File tmp = File.createTempFile("loading-video", ".mp4");
+                File tmp = File.createTempFile("loading-video", ".mkv");
 
                 EmbeddedMediaPlayerComponent component = new EmbeddedMediaPlayerComponent();
-                component.mediaPlayer().events().addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
-                    @Override
-                    public void finished(MediaPlayer mediaPlayer) {
-                        Component[] components = frame.getContentPane().getComponents();
-                        frame.getContentPane().remove(components[1]);
-                        
-                        frame.repaint();
-                        component.release();
-                        while (tmp.exists()) {
-                            tmp.delete();
-                        }
-                    }
-                });
+                component.mediaPlayer().events().addMediaPlayerEventListener(new VideoEvent(frame, tmp));
 
                 Thread loader = new Thread(new LoadingVideo(input, tmp, sender));
                 loader.start();
-                
-                Canvas canva = new Canvas();
-                canva.setVisible(true);
-                
 
-                frame.add(component);
+                Container mainComponent = frame.getContentPane();
+                mainComponent.add(component);
+                JPanel controlers = new JPanel();
+                controlers.setName("Options");
+                JButton btn = new JButton("Hajanona");
+                System.out.println(tmp.length());
+                JLabel message = new JLabel("");
+                btn.addMouseListener(new StopVideo(Integer.parseInt(infos[1]), tmp, component, frame, message));
+                btn.setPreferredSize(new DimensionUIResource(100, 50));
+                controlers.add(btn);
+                
+                controlers.add(message);
+                mainComponent.add(controlers, BorderLayout.SOUTH);
+
                 component.mediaPlayer().media().play(tmp.toPath().toString());
 
             }
@@ -136,6 +133,15 @@ public class ResponseListener implements Runnable {
             e.printStackTrace();
         }
 
+    }
+
+    public static void resetFrame(JFrame frame) {
+    // Par défaut, Il n'y a qu'un élément dans le conteneur principal 
+        Component[] components = frame.getContentPane().getComponents();
+        for (int i = components.length-1; i >= 1; i--) {
+            frame.getContentPane().remove(components[i]);
+        }
+        frame.repaint();
     }
 
 }
