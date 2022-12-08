@@ -9,6 +9,15 @@ ETU001834
 
 ### Dépendances
 * Librairie JLayer
-* Librairie Javafx
+* Librairie VLCJ
+
+### Prérequis
+* Lecteur VLC v3.0.17.4 Vetinari
+
+
+### Remarque
+* (javax.swing) Si le média ne s'affiche pas : modifier un peu la taille de la fenêtre du programme 
+* Le média en cours doit être entièrement chargé avant de charger d'autres médias (Cas Musique : attendre qu'elle finisse )
+
 
 

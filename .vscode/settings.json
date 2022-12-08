@@ -1,19 +1,13 @@
 {
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx.base.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx.controls.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx.fxml.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx.graphics.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx.media.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx.swing.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx.web.jar",
-        "c:\\javafx-sdk-19\\lib\\javafx-swt.jar",
-        "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\jna-5.2.0.jar",
-        "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\jna-platform-5.2.0.jar",
-        "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\vlcj-4.7.1.jar",
-        "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\vlcj-natives-4.1.0.jar"
-    ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\jna-5.2.0.jar",
+            "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\jna-platform-5.2.0.jar",
+            "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\vlcj-4.7.1.jar",
+            "c:\\Users\\Mialisoa\\Downloads\\vlcj-4.7.1-dist\\vlcj-4.7.1\\vlcj-natives-4.1.0.jar"
+        ]
+    }
 }

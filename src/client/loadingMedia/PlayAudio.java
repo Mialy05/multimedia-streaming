@@ -1,9 +1,12 @@
 package client.loadingMedia;
 
+import java.awt.Component;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+
+import javax.swing.JFrame;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
@@ -12,18 +15,27 @@ public class PlayAudio implements Runnable {
     byte[] data;
     Socket server;
     boolean play;
+    JFrame frame;
 
     public PlayAudio() {
     }
 
-    public PlayAudio(Socket server) {
+    public PlayAudio(Socket server, JFrame frame) {
         this.server = server;
+        this.frame = frame;
         this.play = true;
     }
 
     @Override
     public void run() {
         int tranche = 50000;
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
 
         DataInputStream input;
         try {
@@ -41,7 +53,6 @@ public class PlayAudio implements Runnable {
                 } catch (JavaLayerException e) {
                     e.printStackTrace();
                 }
-
                 read = input.read(data);
             }
             if (read != -1) {
@@ -51,7 +62,16 @@ public class PlayAudio implements Runnable {
                     lastdata[i] = data[i];
                 }
                 player = new AdvancedPlayer(new ByteArrayInputStream(lastdata));
-                player.play();
+                try {
+                    player.play();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            Component[] components = frame.getContentPane().getComponents();
+            if(components.length > 1) {
+                frame.getContentPane().remove(components[1]);
             }
 
         } catch (IOException e1) {
