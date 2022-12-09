@@ -69,10 +69,8 @@ public class PlayAudio implements Runnable {
                 }
             }
 
-            Component[] components = frame.getContentPane().getComponents();
-            if(components.length > 1) {
-                frame.getContentPane().remove(components[1]);
-            }
+            ResponseListener.resetFrame(frame);
+            
 
         } catch (IOException e1) {
             // TODO Auto-generated catch block

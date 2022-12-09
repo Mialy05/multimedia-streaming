@@ -40,10 +40,8 @@ public class StopVideo implements MouseListener{
         else {
             double pourcentage = (currentSize*100)/totalSize;
 
-            // message.add(new JLabel("Mbola tsy afaka tapahana raha tsy feno 100% (" + pourcentage + ")"));
             message.setText("Mbola tsy afaka tapahana raha tsy feno 100% (" + pourcentage + ")");
             message.repaint();
-            // this.frame.getContentPane().add(message,BorderLayout.LINE_END);
             System.out.println(pourcentage);
         }
     }
