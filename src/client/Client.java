@@ -12,6 +12,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.DimensionUIResource;
 
 import client.event.BtnListener;
+import client.event.CloseWindow;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,6 +32,7 @@ public class Client {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setBounds(200, 200, 1200, 700);
             frame.setVisible(true);
+            frame.addWindowListener(new CloseWindow(client));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {

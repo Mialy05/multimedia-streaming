@@ -58,12 +58,10 @@ public class Sender implements Runnable {
                 FileInputStream inputStream = new FileInputStream(file);
                 byte[] data = inputStream.readAllBytes();
               
-
                 System.out.println("Sending " + file.getName() + " " +data.length+ "  ... ");
                 out.writeUTF(fileType + ";;" + data.length + ";;" + file.getName());
                 out.write(data);
-                // out.flush();
-                
+                out.flush();
 
                 System.out.println("lany");
             } else {

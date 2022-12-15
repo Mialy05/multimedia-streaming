@@ -28,10 +28,8 @@ public class VideoEvent implements MediaPlayerEventListener {
         ResponseListener.resetFrame(frame);
 
         player.release();
-        while (tmp.exists()) {
-            tmp.delete();
-        }
-
+        Thread t = new Thread(new DeleteFile(tmp));
+        t.start();
     }
 
     @Override

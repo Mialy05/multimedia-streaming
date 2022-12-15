@@ -36,6 +36,8 @@ public class StopVideo implements MouseListener{
         if(currentSize == totalSize) {
             this.player.release();
             ResponseListener.resetFrame(frame);
+            Thread t = new Thread(new DeleteFile(tmp));
+            t.start();
         }
         else {
             double pourcentage = (currentSize*100)/totalSize;
