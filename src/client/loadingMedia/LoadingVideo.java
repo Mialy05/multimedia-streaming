@@ -26,7 +26,6 @@ public class LoadingVideo implements Runnable {
 
             int tranche = 130000;
 
-            System.out.println(tranche);
             byte[] dataSource = new byte[tranche];
             int read = source.read(dataSource);
             System.out.println("vovaky " + read);

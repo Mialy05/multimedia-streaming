@@ -35,7 +35,7 @@ public class BtnListener implements MouseListener {
             e1.printStackTrace();
         }
         
-        System.out.println(req);
+        // System.out.println(req);
     }
 
     @Override

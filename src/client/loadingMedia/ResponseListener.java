@@ -51,9 +51,11 @@ public class ResponseListener implements Runnable {
                 try {
                     System.out.println("Waiting ...");
                     info = input.readUTF();
+                    System.out.println("server: " + info);
                     break;
                 } catch (Exception e) {
-                    input.readByte();
+                    input.readAllBytes();
+                    System.out.println("mbola");
                 }
             }
             // info = input.readUTF();

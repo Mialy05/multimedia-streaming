@@ -16,14 +16,20 @@ public class Server {
         String listToSend = getMediaList();
         try {
             ServerSocket server = new ServerSocket(5000);
+            Socket client;
+            DataOutputStream out;
+            ServerThread reqThread;
+            Thread listener;
+
             while(true) {
-                Socket client = server.accept();
+                client = server.accept();
                 System.out.println(client.getInetAddress().getHostName() + " connected");
-                DataOutputStream out = new DataOutputStream(client.getOutputStream());
+                out = new DataOutputStream(client.getOutputStream());
                 out.writeUTF(listToSend);
                 
                 System.out.println("lasa");
-                Thread listener = new Thread(new ServerThread(client));
+                reqThread = new ServerThread(client);
+                listener = new Thread(reqThread);
                 listener.start();
             } 
         } catch (IOException e) {

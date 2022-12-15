@@ -63,7 +63,7 @@ public class Sender implements Runnable {
                 out.write(data);
                 out.flush();
 
-                System.out.println("lany");
+                inputStream.close();
             } else {
                 out.writeUTF("Erreur fichier n'existe pas dans le repertoire");
             }

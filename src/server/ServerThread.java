@@ -23,30 +23,29 @@ public class ServerThread implements Runnable {
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 msg = in.readLine();
                 System.out.println("Ito msg " + msg);
-        // hanapaka an'ilay envoi ana data raha ohatra ka nandefa requete ilay client 
-                // if (running != null) {
-                //     running.interrupt();
-                //     System.out.println("interrupted " + running.isInterrupted());
-                // }
-                if(msg.equals("STOP")) {
+                if (msg.equals("STOP")) {
                     client.close();
-                }
-                else {
+                } else {
+                    // hanapaka an'ilay envoi ana data raha ohatra ka nandefa requete ilay client
+                    if (running != null) {
+                        running.interrupt();
+                        System.out.println("interrupted " + running.isInterrupted());
+                    }
+
                     Sender sender = new Sender(msg, client);
                     Thread threadSender = new Thread(sender);
                     running = threadSender;
                     threadSender.start();
                 }
-                
 
             } catch (IOException e) {
                 System.out.println("Erreur de connexion");
                 try {
                     client.close();
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                    // e1.printStackTrace();
                 }
-            } 
+            }
         }
         System.out.println(client.getInetAddress().getHostName() + " disconnected");
     }

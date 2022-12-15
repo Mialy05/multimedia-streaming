@@ -50,6 +50,7 @@ public class PlayAudio implements Runnable {
                     player = new AdvancedPlayer(new ByteArrayInputStream(data));
                     System.out.println("Playing ...");
                     player.play();
+                    player.close();
                 } catch (JavaLayerException e) {
                     e.printStackTrace();
                 }
