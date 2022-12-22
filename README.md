@@ -14,7 +14,7 @@ ETU001834
 ### Prérequis
 * Lecteur VLC v3.0.17.4 Vetinari ou plus
 
-### Fonctionalités
+### Fonctionnalités
 * Streaming image avec javax.Swing (format jpeg, png, gif)
 * Streaming audio avec JLayer (format MPEG dont MP3)
 * Streaming vidéo avec VLCJ (format mkv uniquement)
