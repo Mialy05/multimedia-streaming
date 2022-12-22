@@ -9,6 +9,7 @@ import java.net.Socket;
 public class Sender implements Runnable {
     String req;
     Socket client;
+    DataOutputStream out;
 
     public Sender(String req, Socket client) {
         this.req = req;
@@ -53,7 +54,7 @@ public class Sender implements Runnable {
         }
 
         try {
-            DataOutputStream out = new DataOutputStream(client.getOutputStream());
+            out = new DataOutputStream(client.getOutputStream());
             if (!error) { 
                 FileInputStream inputStream = new FileInputStream(file);
                 byte[] data = inputStream.readAllBytes();
@@ -71,6 +72,10 @@ public class Sender implements Runnable {
             e.printStackTrace();
         }
 
+    }
+
+    public DataOutputStream getOut() {
+        return out;
     }
 
 }
